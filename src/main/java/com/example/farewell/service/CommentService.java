@@ -1,9 +1,10 @@
 package com.example.farewell.service;
 
 import com.example.farewell.domain.dto.comment.CommentDto;
+import com.example.farewell.domain.dto.comment.CommentLikeResponse;
 import com.example.farewell.domain.entity.Comment;
+import com.example.farewell.domain.entity.CommentLike;
 import com.example.farewell.domain.entity.Post;
-import com.example.farewell.domain.entity.PostLike;
 import com.example.farewell.repository.CommentLikeRepository;
 import com.example.farewell.repository.CommentRepository;
 import com.example.farewell.repository.PostRepository;
@@ -44,4 +45,20 @@ public class CommentService {
         }
     }
 
+    @Transactional
+    public CommentLikeResponse likeComment(Long commentId, Long userId) {
+        Optional<CommentLike> commentLike = commentLikeRepository.findByCommentIdAndUser_Id(commentId, userId);
+        boolean isLiked;
+        if (commentLike.isPresent()) {
+            commentLikeRepository.delete(commentLike.get());
+            isLiked = false;
+        } else {
+            commentLikeRepository.save(CommentLike.builder()
+                    .user(userRepository.findById(userId).get())
+                    .comment(commentRepository.findById(commentId).get())
+                    .build());
+            isLiked = true;
+        }
+        return new CommentLikeResponse(isLiked);
+    }
 }
