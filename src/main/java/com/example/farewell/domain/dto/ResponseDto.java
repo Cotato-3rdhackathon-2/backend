@@ -31,7 +31,6 @@ public class ResponseDto<D> {
 
     public static <D> ResponseDto<D> failed(HttpStatus httpStatus, String message, D data) {
         return ResponseDto.set(false, httpStatus.value(), message, data);
-
-
     }
 }
+
