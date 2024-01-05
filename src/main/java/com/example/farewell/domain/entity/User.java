@@ -1,5 +1,6 @@
 package com.example.farewell.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,17 +27,22 @@ public class User {
     private String nickname;
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private List<Comment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private List<CommentLike> commentLikes = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private List<Post> posts = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private List<PostLike> postLikes = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private List<Farewell> farewells = new ArrayList<>();
 }

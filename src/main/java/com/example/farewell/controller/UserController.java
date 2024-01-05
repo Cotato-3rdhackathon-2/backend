@@ -21,8 +21,7 @@ public class UserController {
     @PostMapping("/oauth/token")
     public ResponseDto<?> getLogin(@RequestBody KaKaoRequestDto kaKaoRequestDto){
 
-        return ResponseDto.success("dsasaf",userService.saveUser(kaKaoRequestDto));
-
+        return ResponseDto.success("Success!",userService.saveUser(kaKaoRequestDto));
 
 
     }

@@ -1,18 +1,17 @@
 package com.example.farewell.service;
 
+import com.example.farewell.domain.dto.ResponseDto;
 import com.example.farewell.domain.dto.oauth.KaKaoProfile;
 import com.example.farewell.domain.dto.oauth.KaKaoRequestDto;
 import com.example.farewell.domain.dto.oauth.KaKaoResponseDto;
 import com.example.farewell.domain.dto.oauth.OauthToken;
 import com.example.farewell.domain.entity.User;
+import com.example.farewell.jwt.TokenProvider;
 import com.example.farewell.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -26,6 +25,8 @@ import java.io.IOException;
 public class UserService {
 
     private final UserRepository userRepository;
+
+    private final TokenProvider tokenProvider;
 
     public OauthToken getAccessToken(KaKaoRequestDto kaKaoRequestDto) {
         RestTemplate rt = new RestTemplate();
@@ -63,7 +64,7 @@ public class UserService {
 
     }
 
-    public String saveUser(KaKaoRequestDto kaKaoRequestDto) {
+    public KaKaoResponseDto saveUser(KaKaoRequestDto kaKaoRequestDto) {
         KaKaoProfile kakaoProfile = findUser(kaKaoRequestDto.getAccessToken());
 
         User user = userRepository.findByEmail(kakaoProfile.getKakao_account().getEmail());
@@ -75,12 +76,17 @@ public class UserService {
                     .email(kakaoProfile.getKakao_account().getEmail())
                     .build();
 
-
             userRepository.save(user);
+
+            String accessToken = tokenProvider.create(user.getKakaoId());
+            String refreshToken = tokenProvider.refresh(accessToken);
+            int exprTime = 3600000;
+
+            KaKaoResponseDto kaKaoResponseDto = new KaKaoResponseDto(accessToken, refreshToken, exprTime, user);
+            return kaKaoResponseDto;
         }
 
-        return "hi";
-
+        return  null;
 
     }
 
@@ -108,7 +114,6 @@ public class UserService {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-
         return kakaoProfile;
 
 
