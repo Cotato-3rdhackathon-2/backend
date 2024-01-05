@@ -23,6 +23,5 @@ public class UserController {
 
         return ResponseDto.success("Success!",userService.saveUser(kaKaoRequestDto));
 
-
     }
 }

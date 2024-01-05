@@ -78,9 +78,9 @@ public class UserService {
                     .email(kakaoProfile.getKakao_account().getEmail())
                     .build();
 
-            userRepository.save(user);
+            User savedUser = userRepository.save(user);
 
-            String accessToken = tokenProvider.create(user.getKakaoId());
+            String accessToken = tokenProvider.create(savedUser.getId());
             String refreshToken = tokenProvider.refresh(accessToken);
             int exprTime = 3600000;
 
@@ -97,7 +97,7 @@ public class UserService {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + token); //(1-4)
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
-
+        System.out.println("token = " + token);
         HttpEntity<MultiValueMap<String, String>> kakaoProfileRequest =
                 new HttpEntity<>(headers);
 
