@@ -5,6 +5,7 @@ import com.example.farewell.domain.dto.post.PostWriteRequest;
 import com.example.farewell.domain.dto.post.PostWriteResponse;
 import com.example.farewell.domain.entity.Post;
 import com.example.farewell.domain.entity.PostLike;
+import com.example.farewell.domain.entity.User;
 import com.example.farewell.repository.PostLikeRepository;
 import com.example.farewell.repository.PostRepository;
 import com.example.farewell.repository.UserRepository;
@@ -24,13 +25,14 @@ public class PostService {
     private final PostLikeRepository postLikeRepository;
     private final UserRepository userRepository;
 
-    public PostWriteResponse createPost(PostWriteRequest postWriteRequest) {
+    public PostWriteResponse createPost(PostWriteRequest postWriteRequest,Long userId) {
         System.out.println("postWriteRequest = " + postWriteRequest.getContent());
         Post savedPost = postRepository.save(Post.builder()
                 .title(postWriteRequest.getTitle())
                 .content(postWriteRequest.getContent())
                 .category(postWriteRequest.getCategory())
                 .createAt(LocalDateTime.now())
+                .user(userRepository.findById(userId).get())
                 .build());
         return new PostWriteResponse(savedPost.getId());
 
@@ -47,14 +49,15 @@ public class PostService {
 
     @Transactional
     public PostLikeResponse likePost(Long postId, Long userId) {
-        Optional<PostLike> postLike = postLikeRepository.findByPostIdAndUser_Id(postId, userId);
+        User user = userRepository.findById(userId).get();
+        Optional<PostLike> postLike = postLikeRepository.findByPostIdAndUser(postId, user);
         boolean isLiked;
         if (postLike.isPresent()) {
             postLikeRepository.delete(postLike.get());
             isLiked = false;
         } else {
             postLikeRepository.save(PostLike.builder()
-                    .user(userRepository.findById(userId).get())
+                    .user(user)
                     .post(postRepository.findById(postId).get())
                     .build());
             isLiked = true;

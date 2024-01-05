@@ -33,19 +33,27 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (token != null && !token.equalsIgnoreCase("null")) {
                 String email = tokenProvider.validate(token);
 
-
+                System.out.println("=====vvvvvvv=======");
                 authentication = new UsernamePasswordAuthenticationToken(email, null, AuthorityUtils.NO_AUTHORITIES);
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+                SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
+                securityContext.setAuthentication(authentication);
+                SecurityContextHolder.setContext(securityContext);
+                filterChain.doFilter(request, response);
+
             }
-            
-            SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
-            securityContext.setAuthentication(authentication);
-            SecurityContextHolder.setContext(securityContext);
         } catch (Exception exception) {
             exception.printStackTrace();
         }
-        filterChain.doFilter(request, response);
+        System.out.println("=====mmmmmm=======");
 
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String path = request.getRequestURI();
+        return path.startsWith("/api/oauth");
     }
 
     private String parseBearerToken(HttpServletRequest request){
@@ -56,7 +64,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         return null;
 
+
     }
+
 
 
 }

@@ -1,5 +1,6 @@
 package com.example.farewell.jwt;
 
+import com.example.farewell.domain.dto.oauth.UserId;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -33,6 +34,7 @@ public class TokenProvider implements InitializingBean {
                 .setIssuedAt(new Date())
                 .setExpiration(exprTime)
                 .claim("refreshToken", refreshToken)
+                .claim("id", id)
                 .compact();
     }
 
@@ -83,5 +85,11 @@ public class TokenProvider implements InitializingBean {
         } catch (Exception e) {
             throw new BadCredentialsException("Token refresh failed", e);
         }
+    }
+
+    public Long getUserId(String token){
+        Claims claims = Jwts.parser().setSigningKey(SECURITY_KEY).parseClaimsJws(token).getBody();
+        Long id = claims.get("id", Long.class);
+        return id;
     }
 }

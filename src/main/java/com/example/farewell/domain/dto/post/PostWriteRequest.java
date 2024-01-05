@@ -11,5 +11,4 @@ public class PostWriteRequest {
     String title;
     String category;
     String content;
-    Long userId;
 }
