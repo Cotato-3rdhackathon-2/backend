@@ -10,8 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.FileNameMap;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -41,7 +39,7 @@ public class PostController {
         return ResponseDto.success("좋아요/해제 완료", postService.likePost(postId,userId));
     }
 
-    @GetMapping("/{category}")
+    @GetMapping("/category/{category}")
     public ResponseEntity<List<Post>> getPostsByCategory(@PathVariable String category) {
         List<Post> posts = postService.getPostsByCategory(category);
         return new ResponseEntity<>(posts, HttpStatus.OK);
