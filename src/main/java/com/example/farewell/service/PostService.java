@@ -8,6 +8,8 @@ import com.example.farewell.domain.entity.PostLike;
 import com.example.farewell.repository.PostLikeRepository;
 import com.example.farewell.repository.PostRepository;
 import com.example.farewell.repository.UserRepository;
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,8 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.swing.text.html.Option;
 import java.net.FileNameMap;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+
 
 @Service
 @RequiredArgsConstructor
@@ -36,7 +37,6 @@ public class PostService {
         return new PostWriteResponse(savedPost.getId());
 
     }
-
 
     public List<Post> getAllPosts() {
         return postRepository.findAll();
@@ -63,4 +63,5 @@ public class PostService {
         }
         return new PostLikeResponse(isLiked);
     }
+    public List<Post> getPostsByCategory(String category) {return postRepository.findByCategory(category);}
 }
