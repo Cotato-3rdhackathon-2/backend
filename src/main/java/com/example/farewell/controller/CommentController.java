@@ -39,7 +39,7 @@ public class CommentController {
     }
 
 
-    @GetMapping("/like")
+    @GetMapping("/likes")
     public ResponseEntity<ResponseDto<CommentLikeResponse>> likeComment(@RequestParam Long commentId, @RequestParam Long userId) {
         CommentLikeResponse response = commentService.likeComment(commentId, userId);
         ResponseDto<CommentLikeResponse> responseDto = ResponseDto.success("댓글 좋아요/해제 완료", response);
