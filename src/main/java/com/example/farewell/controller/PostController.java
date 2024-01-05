@@ -28,9 +28,9 @@ public class PostController {
         return new ResponseEntity<>(posts, HttpStatus.OK);
     }
 
-    @GetMapping("/{post_id}")
-    public ResponseEntity<Post> getPostById(@PathVariable Long post_id) {
-        return postService.getPostById(post_id)
+    @GetMapping("/{postId}")
+    public ResponseEntity<Post> getPostById(@PathVariable Long postId) {
+        return postService.getPostById(postId)
                 .map(post -> new ResponseEntity<>(post, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
