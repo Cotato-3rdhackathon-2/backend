@@ -1,5 +1,6 @@
 package com.example.farewell.domain.entity;
 
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -35,4 +36,4 @@ public class Post {
     @JsonIgnore
     private User user;
 
-}
+
