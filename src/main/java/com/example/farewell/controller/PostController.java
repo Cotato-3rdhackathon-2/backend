@@ -10,8 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.FileNameMap;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/posts")
@@ -30,9 +28,9 @@ public class PostController {
         return new ResponseEntity<>(posts, HttpStatus.OK);
     }
 
-    @GetMapping("/{postId}")
-    public ResponseEntity<Post> getPostById(@PathVariable Long postId) {
-        return postService.getPostById(postId)
+    @GetMapping("/{post_id}")
+    public ResponseEntity<Post> getPostById(@PathVariable Long post_id) {
+        return postService.getPostById(post_id)
                 .map(post -> new ResponseEntity<>(post, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
