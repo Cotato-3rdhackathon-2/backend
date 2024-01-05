@@ -1,26 +1,23 @@
 package com.example.farewell.controller;
 
-import com.example.farewell.domain.entity.Post;
+import com.example.farewell.domain.dto.ResponseDto;
+import com.example.farewell.domain.dto.post.PostWriteRequest;
 import com.example.farewell.service.PostService;
-import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+
+import java.net.FileNameMap;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/posts")
 public class PostController {
-
     private final PostService postService;
 
-    @Autowired
-    public PostController(PostService postService) {
-        this.postService = postService;
-    }
+    @PostMapping("")
+    public ResponseDto<?> writePost(@RequestBody PostWriteRequest postWriteRequest) {
+        System.out.println(postWriteRequest.getTitle());
+        return ResponseDto.success("게시글 생성 완료", postService.createPost(postWriteRequest));
 
     @GetMapping
     public ResponseEntity<List<Post>> getAllPosts() {
@@ -33,5 +30,6 @@ public class PostController {
         return postService.getPostById(postId)
                 .map(post -> new ResponseEntity<>(post, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+
     }
 }

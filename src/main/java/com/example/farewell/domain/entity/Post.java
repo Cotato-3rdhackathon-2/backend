@@ -4,6 +4,7 @@ package com.example.farewell.domain.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,6 +15,7 @@ import java.util.List;
 
 @Entity
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "post")
@@ -27,7 +29,7 @@ public class Post {
 
     private String title;
 
-    private String Content;
+    private String content;
 
     private LocalDateTime createAt;
 

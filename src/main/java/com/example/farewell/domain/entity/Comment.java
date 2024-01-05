@@ -22,6 +22,7 @@ public class Comment {
     @Column(name = "comment_id")
     private Long id;
     private LocalDateTime createdAt;
+    private String content;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
