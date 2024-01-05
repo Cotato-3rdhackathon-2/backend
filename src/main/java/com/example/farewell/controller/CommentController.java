@@ -1,8 +1,12 @@
 package com.example.farewell.controller;
 
+import com.example.farewell.domain.dto.ResponseDto;
+import com.example.farewell.domain.dto.comment.CommentWriteRequest;
+import com.example.farewell.domain.dto.comment.CommentWriteResponse;
+import com.example.farewell.domain.dto.comment.CommentDto;
 import com.example.farewell.domain.entity.Comment;
 import com.example.farewell.service.CommentService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,28 +14,26 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/comments")
 public class CommentController {
-
     private final CommentService commentService;
 
-    @Autowired
-    public CommentController(CommentService commentService) {
-        this.commentService = commentService;
-    }
-
     @GetMapping("/{postId}")
-    public ResponseEntity<List<Comment>> getCommentsByPostId(@PathVariable("postId") Long postId) {
+    public ResponseEntity<ResponseDto<List<Comment>>> getCommentsByPostId(@PathVariable Long postId) {
         List<Comment> comments = commentService.getCommentsByPostId(postId);
-        return new ResponseEntity<>(comments, HttpStatus.OK);
+        ResponseDto<List<Comment>> responseDto = ResponseDto.success("댓글 조회 완료", comments);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
     @PostMapping("/{postId}")
-    public ResponseEntity<Comment> createComment(
+    public ResponseEntity<ResponseDto<CommentWriteResponse>> createComment(
             @PathVariable Long postId,
-            @RequestBody String content,
-            @RequestParam Long userId) {
-        Comment comment = commentService.createComment(postId, content, userId);
-        return new ResponseEntity<>(comment, HttpStatus.CREATED);
+            @RequestBody CommentWriteRequest commentWriteRequest) {
+        CommentDto commentDto = new CommentDto(commentWriteRequest.getContent(), commentWriteRequest.getUserId());
+        Comment comment = commentService.createComment(postId, commentDto);
+        CommentWriteResponse response = new CommentWriteResponse(comment.getId());
+        ResponseDto<CommentWriteResponse> responseDto = ResponseDto.success("댓글 작성 완료", response);
+        return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 }
