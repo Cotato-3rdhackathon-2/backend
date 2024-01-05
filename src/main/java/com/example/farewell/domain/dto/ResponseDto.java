@@ -33,3 +33,4 @@ public class ResponseDto<D> {
         return ResponseDto.set(false, httpStatus.value(), message, data);
     }
 }
+
