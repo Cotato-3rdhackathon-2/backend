@@ -3,8 +3,6 @@ import com.example.farewell.domain.dto.post.PostWriteRequest;
 import com.example.farewell.domain.dto.post.PostWriteResponse;
 import com.example.farewell.domain.entity.Post;
 import com.example.farewell.repository.PostRepository;
-import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.net.FileNameMap;
@@ -27,6 +25,7 @@ public class PostService {
 
     }
 
+
     public List<Post> getAllPosts() {
         return postRepository.findAll();
     }
@@ -35,5 +34,5 @@ public class PostService {
         return postRepository.findById(postId);
     }
 
-    public List<Post> getPostsByCategory(String category) {return postRepository.findByCategory(category);}
+
 }
