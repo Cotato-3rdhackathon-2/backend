@@ -2,11 +2,15 @@ package com.example.farewell.controller;
 
 import com.example.farewell.domain.dto.ResponseDto;
 import com.example.farewell.domain.dto.post.PostWriteRequest;
+import com.example.farewell.domain.entity.Post;
 import com.example.farewell.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.FileNameMap;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,18 +22,21 @@ public class PostController {
     public ResponseDto<?> writePost(@RequestBody PostWriteRequest postWriteRequest) {
         System.out.println(postWriteRequest.getTitle());
         return ResponseDto.success("게시글 생성 완료", postService.createPost(postWriteRequest));
+    }
 
     @GetMapping
-    public ResponseEntity<List<Post>> getAllPosts() {
+    public ResponseDto<List<Post>> getAllPosts() {
         List<Post> posts = postService.getAllPosts();
-        return new ResponseEntity<>(posts, HttpStatus.OK);
+        return ResponseDto.success("조회 완료", posts);
     }
 
     @GetMapping("/{postId}")
-    public ResponseEntity<Post> getPostById(@PathVariable Long postId) {
-        return postService.getPostById(postId)
-                .map(post -> new ResponseEntity<>(post, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    public ResponseDto<Post> getPostById(@PathVariable Long postId) {
+        return ResponseDto.success("조회 완료", postService.getPostById(postId).get());
+    }
 
+    @GetMapping("/likes")
+    public ResponseDto<?> likePost(@RequestParam Long postId, @RequestParam Long userId){
+        return ResponseDto.success("좋아요/해제 완료", postService.likePost(postId,userId));
     }
 }
