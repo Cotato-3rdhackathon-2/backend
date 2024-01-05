@@ -32,6 +32,8 @@ dependencies {
     testImplementation 'org.springframework.security:spring-security-test'
     runtimeOnly 'com.mysql:mysql-connector-j'
 
+
+
 }
 
 tasks.named('test') {

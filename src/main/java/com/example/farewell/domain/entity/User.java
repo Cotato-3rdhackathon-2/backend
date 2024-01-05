@@ -21,7 +21,7 @@ public class User {
     @Column(name = "user_id")
     private Long id;
     private String kakaoNickname;
-    private String kakaoId;
+    private Long kakaoId;
     private String email;
     private String nickname;
 
