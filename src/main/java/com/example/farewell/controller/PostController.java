@@ -18,5 +18,18 @@ public class PostController {
     public ResponseDto<?> writePost(@RequestBody PostWriteRequest postWriteRequest) {
         System.out.println(postWriteRequest.getTitle());
         return ResponseDto.success("게시글 생성 완료", postService.createPost(postWriteRequest));
+
+    @GetMapping
+    public ResponseEntity<List<Post>> getAllPosts() {
+        List<Post> posts = postService.getAllPosts();
+        return new ResponseEntity<>(posts, HttpStatus.OK);
+    }
+
+    @GetMapping("/{postId}")
+    public ResponseEntity<Post> getPostById(@PathVariable Long postId) {
+        return postService.getPostById(postId)
+                .map(post -> new ResponseEntity<>(post, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+
     }
 }
