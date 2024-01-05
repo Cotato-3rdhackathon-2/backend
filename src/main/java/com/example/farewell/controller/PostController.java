@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/posts")
@@ -23,16 +24,19 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Post>> getAllPosts() {
+    public ResponseDto<List<Post>> getAllPosts() {
         List<Post> posts = postService.getAllPosts();
-        return new ResponseEntity<>(posts, HttpStatus.OK);
+        return ResponseDto.success("조회 완료", posts);
     }
 
     @GetMapping("/{postId}")
-    public ResponseEntity<Post> getPostById(@PathVariable Long postId) {
-        return postService.getPostById(postId)
-                .map(post -> new ResponseEntity<>(post, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    public ResponseDto<Post> getPostById(@PathVariable Long postId) {
+        return ResponseDto.success("조회 완료", postService.getPostById(postId).get());
+    }
+
+    @GetMapping("/likes")
+    public ResponseDto<?> likePost(@RequestParam Long postId, @RequestParam Long userId){
+        return ResponseDto.success("좋아요/해제 완료", postService.likePost(postId,userId));
     }
 
     @GetMapping("/category/{category}")
