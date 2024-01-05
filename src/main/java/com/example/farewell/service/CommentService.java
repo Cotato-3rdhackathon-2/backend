@@ -29,6 +29,7 @@ public class CommentService {
         return commentRepository.findByPostId(postId);
     }
 
+    @Transactional
     public Comment createComment(Long postId, CommentDto commentDto) {
         Optional<Post> postOptional = postRepository.findById(postId);
         if (postOptional.isPresent()) {
@@ -53,9 +54,11 @@ public class CommentService {
             commentLikeRepository.delete(commentLike.get());
             isLiked = false;
         } else {
+            Comment comment = commentRepository.findById(commentId).get();
             commentLikeRepository.save(CommentLike.builder()
                     .user(userRepository.findById(userId).get())
-                    .comment(commentRepository.findById(commentId).get())
+                    .comment(comment)
+                    .post(comment.getPost())
                     .build());
             isLiked = true;
         }
