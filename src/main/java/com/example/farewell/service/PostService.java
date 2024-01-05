@@ -44,7 +44,6 @@ public class PostService {
         return postRepository.findById(postId);
     }
 
-
     @Transactional
     public PostLikeResponse likePost(Long postId, Long userId) {
         Optional<PostLike> postLike = postLikeRepository.findByPostIdAndUser_Id(postId, userId);
@@ -61,5 +60,6 @@ public class PostService {
         }
         return new PostLikeResponse(isLiked);
     }
+
     public List<Post> getPostsByCategory(String category) {return postRepository.findByCategory(category);}
 }

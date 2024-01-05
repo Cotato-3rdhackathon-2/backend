@@ -5,11 +5,13 @@ import com.example.farewell.domain.dto.oauth.KaKaoProfile;
 import com.example.farewell.domain.dto.oauth.KaKaoRequestDto;
 import com.example.farewell.domain.dto.oauth.KaKaoResponseDto;
 import com.example.farewell.domain.dto.oauth.OauthToken;
+import com.example.farewell.domain.entity.Post;
 import com.example.farewell.domain.entity.User;
 import com.example.farewell.jwt.TokenProvider;
 import com.example.farewell.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -116,6 +118,9 @@ public class UserService {
         }
         return kakaoProfile;
 
+    }
 
+    public Optional<User> getUserById(Long userId) {
+        return userRepository.findById(userId);
     }
 }
