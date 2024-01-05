@@ -37,7 +37,7 @@ public class PostController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @GetMapping("/{category}")
+    @GetMapping("/category/{category}")
     public ResponseEntity<List<Post>> getPostsByCategory(@PathVariable String category) {
         List<Post> posts = postService.getPostsByCategory(category);
         return new ResponseEntity<>(posts, HttpStatus.OK);
