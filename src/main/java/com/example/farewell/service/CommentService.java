@@ -1,45 +1,47 @@
 package com.example.farewell.service;
 
+import com.example.farewell.domain.dto.comment.CommentDto;
 import com.example.farewell.domain.entity.Comment;
 import com.example.farewell.domain.entity.Post;
-import com.example.farewell.domain.entity.User;
+import com.example.farewell.domain.entity.PostLike;
+import com.example.farewell.repository.CommentLikeRepository;
 import com.example.farewell.repository.CommentRepository;
-import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.farewell.repository.PostRepository;
+import com.example.farewell.repository.UserRepository;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class CommentService {
-
     private final CommentRepository commentRepository;
-    private final PostService postService;
-    private final UserService userService;
-
-    @Autowired
-    public CommentService(CommentRepository commentRepository, PostService postService, UserService userService) {
-        this.commentRepository = commentRepository;
-        this.postService = postService;
-        this.userService = userService;
-    }
+    private final CommentLikeRepository commentLikeRepository;
+    private final PostRepository postRepository;
+    private final UserRepository userRepository;
 
     public List<Comment> getCommentsByPostId(Long postId) {
         return commentRepository.findByPostId(postId);
     }
 
-    public Comment createComment(Long postId, String content, Long userId) {
-        Post post = postService.getPostById(postId).orElseThrow(() -> new EntityNotFoundException("게시물을 찾을 수 없습니다."));
-        User user = userService.getUserById(userId).orElseThrow(() -> new EntityNotFoundException("사용자를 찾을 수 없습니다."));
-
-        Comment comment = Comment.builder()
-                .content(content)
-                .createdAt(LocalDateTime.now())
-                .post(post)
-                .user(user)
-                .build();
-
-        return commentRepository.save(comment);
+    public Comment createComment(Long postId, CommentDto commentDto) {
+        Optional<Post> postOptional = postRepository.findById(postId);
+        if (postOptional.isPresent()) {
+            Post post = postOptional.get();
+            Comment comment = Comment.builder()
+                    .content(commentDto.getContent())
+                    .createdAt(LocalDateTime.now())
+                    .post(post)
+                    .user(userRepository.findById(commentDto.getUserId()).orElseThrow())
+                    .build();
+            return commentRepository.save(comment);
+        } else {
+            throw new IllegalArgumentException("게시물을 찾을 수 없습니다.");
+        }
     }
+
 }
