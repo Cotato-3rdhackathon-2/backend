@@ -1,4 +1,5 @@
-package com.example.farewell.domain.dto.post;
+package com.example.farewell.domain.dto.comment;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,8 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PostWriteRequest {
-    String title;
-    String category;
+public class CommentWriteRequest {
     String content;
+    Long userId;
 }

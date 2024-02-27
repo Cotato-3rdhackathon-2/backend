@@ -7,8 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PostWriteRequest {
-    String title;
-    String category;
-    String content;
+public class PostLikeResponse {
+
+    boolean isLiked;
 }
